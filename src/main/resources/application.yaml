@@ -1,3 +1,7 @@
 spring:
   application:
     name: simple-todo-list
+  profiles:
+    active: test
+  jpa:
+    open-in-view: false

@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "tb_user")
 @NoArgsConstructor
@@ -23,4 +26,8 @@ public class User {
     private String login;
     private String password;
     private String nome;
+
+    // Relacionamento um-para-muitos (um único usuário tem uma ou mais tarefas)
+    @OneToMany(mappedBy = "user") // Nome do atributo criado na outra classe
+    private List<Todo> todos = new ArrayList<>();
 }

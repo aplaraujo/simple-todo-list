@@ -1,0 +1,25 @@
+# Configuração do banco de dados H2 no perfil de testes do projeto
+
+# Dados de conexão com o banco H2
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+# Cliente H2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# JPA, SQL
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
