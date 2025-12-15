@@ -19,6 +19,8 @@ public class Todo {
     private String name;
     private String description;
     private Boolean done;
+
+    @Enumerated(EnumType.STRING)
     private PriorityType priority;
 
     // Relacionamento muitos-para-um (muitas tarefas para um único usuário)

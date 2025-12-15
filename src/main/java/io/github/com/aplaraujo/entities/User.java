@@ -23,9 +23,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String login;
+    private String name;
+    private String email;
     private String password;
-    private String nome;
 
     // Relacionamento um-para-muitos (um único usuário tem uma ou mais tarefas)
     @OneToMany(mappedBy = "user") // Nome do atributo criado na outra classe
