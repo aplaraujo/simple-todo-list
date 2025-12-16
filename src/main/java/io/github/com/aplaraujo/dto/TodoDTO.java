@@ -7,7 +7,6 @@ public record TodoDTO(
         String name,
         String description,
         Boolean done,
-        PriorityType priority,
-        UserDTO user
+        PriorityType priority
 ) {
 }
