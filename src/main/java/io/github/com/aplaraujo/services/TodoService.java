@@ -9,6 +9,7 @@ import io.github.com.aplaraujo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +29,9 @@ public class TodoService {
 
     public Optional<Todo> findById(Long id) {
         return repository.findById(id);
+    }
+
+    public List<TodoDTO> todos() {
+        return repository.findAll().stream().map(todo -> new TodoDTO(todo.getId(), todo.getName(), todo.getDescription(), todo.getDone(), todo.getPriority(), todo.getUser().getId())).toList();
     }
 }

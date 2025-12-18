@@ -4,6 +4,7 @@ package io.github.com.aplaraujo.entities;
 // Os nomes da classe e seus atributos devem sempre respeitar o diagrama
 // Mapeamento das entidades para visualização no banco de dados H2
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +30,6 @@ public class User {
 
     // Relacionamento um-para-muitos (um único usuário tem uma ou mais tarefas)
     @OneToMany(mappedBy = "user") // Nome do atributo criado na outra classe
+    @JsonIgnore
     private List<Todo> todos = new ArrayList<>();
 }
