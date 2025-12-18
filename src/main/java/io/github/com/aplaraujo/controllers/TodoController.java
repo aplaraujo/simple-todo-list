@@ -1,27 +1,38 @@
 package io.github.com.aplaraujo.controllers;
 
-import io.github.com.aplaraujo.entities.Todo;
-import io.github.com.aplaraujo.repositories.TodoRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import io.github.com.aplaraujo.dto.TodoDTO;
+import io.github.com.aplaraujo.mappers.TodoMapper;
+import io.github.com.aplaraujo.services.TodoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/todos")
-public class TodoController {
+@RequiredArgsConstructor
+public class TodoController implements GenericController{
 
-    private final TodoRepository todoRepository;
+    private final TodoService service;
+    private final TodoMapper mapper;
 
-    public TodoController(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody TodoDTO dto) {
+        service.save(dto);
+        var url = generateHeaderLocation(dto.id());
+        return ResponseEntity.created(url).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TodoDTO> findById(@PathVariable("id") String id) {
+        var todoId = Long.parseLong(id);
+        return service.findById(todoId).map(todo -> {
+            var dto = mapper.toDTO(todo);
+            return ResponseEntity.ok(dto);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public String teste() {
-        Optional<Todo> optionalTodo = todoRepository.findById(1L);
-        Todo todo = optionalTodo.get();
-        return todo.getName();
+        return "Rota de tarefas";
     }
 }
