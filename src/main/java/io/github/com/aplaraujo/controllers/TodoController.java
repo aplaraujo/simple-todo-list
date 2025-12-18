@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/todos")
@@ -50,6 +49,15 @@ public class TodoController implements GenericController{
             todo.setDone(entity.getDone());
             todo.setPriority(entity.getPriority());
             service.update(todo);
+            return ResponseEntity.noContent().build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") String id) {
+        var todoId = Long.parseLong(id);
+        return service.findById(todoId).map(todo -> {
+            service.delete(todo);
             return ResponseEntity.noContent().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

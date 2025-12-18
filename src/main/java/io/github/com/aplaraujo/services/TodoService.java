@@ -41,4 +41,8 @@ public class TodoService {
         }
         repository.save(todo);
     }
+
+    public void delete(Todo todo) {
+        repository.delete(todo);
+    }
 }
