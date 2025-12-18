@@ -34,4 +34,11 @@ public class TodoService {
     public List<TodoDTO> todos() {
         return repository.findAll().stream().map(todo -> new TodoDTO(todo.getId(), todo.getName(), todo.getDescription(), todo.getDone(), todo.getPriority(), todo.getUser().getId())).toList();
     }
+
+    public void update(Todo todo) {
+        if (todo.getId() == null) {
+            throw new IllegalArgumentException("Todo not found!");
+        }
+        repository.save(todo);
+    }
 }
