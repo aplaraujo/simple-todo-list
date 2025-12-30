@@ -2,6 +2,7 @@ package io.github.com.aplaraujo.config;
 
 import io.github.com.aplaraujo.security.CustomAccessDeniedHandler;
 import io.github.com.aplaraujo.security.CustomAuthenticationEntryPoint;
+import io.github.com.aplaraujo.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +27,7 @@ public class SecurityConfiguration {
 
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,6 +36,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         auth ->
                                 auth.requestMatchers("/h2-console/**").permitAll()
+                                        .requestMatchers("/auth/**").permitAll()
                                         .anyRequest().authenticated()
                 )
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
@@ -41,6 +45,7 @@ public class SecurityConfiguration {
                                 .accessDeniedHandler(accessDeniedHandler)
                         )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
