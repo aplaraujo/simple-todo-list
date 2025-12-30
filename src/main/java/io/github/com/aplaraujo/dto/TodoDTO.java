@@ -1,6 +1,6 @@
 package io.github.com.aplaraujo.dto;
 
-import io.github.com.aplaraujo.entities.PriorityType;
+import io.github.com.aplaraujo.entities.enums.PriorityType;
 
 public record TodoDTO(
         Long id,

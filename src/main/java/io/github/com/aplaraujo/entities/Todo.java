@@ -1,5 +1,6 @@
 package io.github.com.aplaraujo.entities;
 
+import io.github.com.aplaraujo.entities.enums.PriorityType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
