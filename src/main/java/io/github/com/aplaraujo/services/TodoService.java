@@ -6,6 +6,7 @@ import io.github.com.aplaraujo.entities.User;
 import io.github.com.aplaraujo.mappers.TodoMapper;
 import io.github.com.aplaraujo.repositories.TodoRepository;
 import io.github.com.aplaraujo.repositories.UserRepository;
+import io.github.com.aplaraujo.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,24 @@ public class TodoService {
         return mapper.toDTO(todo);
     }
 
-    public Optional<Todo> findById(Long id) {
-        return repository.findById(id);
+    public List<Todo> getAllTodosByUser(Long userId) {
+        return repository.findByUserId(userId);
     }
 
-    public List<TodoDTO> todos() {
-        return repository.findAll().stream().map(todo -> new TodoDTO(todo.getId(), todo.getName(), todo.getDescription(), todo.getDone(), todo.getPriority(), todo.getUser().getId())).toList();
+    public Optional<Todo> getTodoByIdAndUser(Long id, Long userId) {
+        if (id == null || userId == null) {
+            throw new ResourceNotFoundException("Tarefa não encontrada ou não pertence ao usuário");
+        }
+        return repository.findByIdAndUserId(id, userId);
     }
+
+//    public Optional<Todo> findById(Long id) {
+//        return repository.findById(id);
+//    }
+
+//    public List<TodoDTO> todos() {
+//        return repository.findAll().stream().map(todo -> new TodoDTO(todo.getId(), todo.getName(), todo.getDescription(), todo.getDone(), todo.getPriority(), todo.getUser().getId())).toList();
+//    }
 
     public void update(Todo todo) {
         if (todo.getId() == null) {
