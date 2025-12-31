@@ -3,6 +3,7 @@ package io.github.com.aplaraujo.security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.com.aplaraujo.entities.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String email;
