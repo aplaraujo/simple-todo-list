@@ -1,10 +1,13 @@
 package io.github.com.aplaraujo.controllers;
 
+import io.github.com.aplaraujo.dto.AuthResponse;
 import io.github.com.aplaraujo.entities.AuthRequest;
 import io.github.com.aplaraujo.entities.User;
 import io.github.com.aplaraujo.services.JwtService;
 import io.github.com.aplaraujo.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,22 +32,17 @@ public class UserController {
     }
 
     @PostMapping("/token")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 
-        try {
             Authentication authentication = manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
-            if (authentication.isAuthenticated()) {
-                return jwtService.generateToken(authRequest.getEmail());
-            } else {
-                throw new UsernameNotFoundException("Invalid user request!");
+            if (!authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+            String token = jwtService.generateToken(authRequest.getEmail());
+
+            return ResponseEntity.ok(new AuthResponse(token, "Bearer", 30L * 60L));
 
     }
 }

@@ -23,3 +23,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    duration: ${JWT_DURATION}

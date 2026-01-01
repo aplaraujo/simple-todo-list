@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,14 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @ConstructorProperties({"id", "name", "email", "password"})
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     // Relacionamento um-para-muitos (um único usuário tem uma ou mais tarefas)
     @OneToMany(mappedBy = "user") // Nome do atributo criado na outra classe
