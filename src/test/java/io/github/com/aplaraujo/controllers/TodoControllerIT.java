@@ -1,6 +1,8 @@
 package io.github.com.aplaraujo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.com.aplaraujo.dto.TodoDTO;
+import io.github.com.aplaraujo.entities.enums.PriorityType;
 import io.github.com.aplaraujo.tests.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,31 +65,18 @@ public class TodoControllerIT {
 
     @Test
     public void shouldCreateATodoWhenAUserIsLogged() throws Exception {
-        String jsonBody = """
-                {
-                  "name": "Comprar leite",
-                  "description": "Lorem ipsum dolor sit amet",
-                  "done": 1,
-                  "priority": "MEDIA",
-                  "userId": 1
-                }
-                """;
-        ResultActions result = mockMvc.perform(post("/todos").header("Authorization", "Bearer " + userToken).content(jsonBody).contentType(MediaType.APPLICATION_JSON));
+        TodoDTO dto = new TodoDTO(8L, "Comprar leite", "Lorem ipsum dolor sit amet", true, PriorityType.MEDIA, 1L);
+        ResultActions result = mockMvc.perform(post("/todos").header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(dto)).contentType(MediaType.APPLICATION_JSON));
         result.andExpect(status().isCreated());
     }
 
     @Test
     public void shouldUpdateATodoWhenAUserIsLogged() throws Exception {
-        String jsonBody = """
-                {
-                  "name": "Lavar a louça",
-                  "description": "Descrição atualizada",
-                  "done": 0,
-                  "priority": "MEDIA",
-                  "userId": 1
-                }
-                """;
-        ResultActions result = mockMvc.perform(put("/todos/" + existentTodoId).header("Authorization", "Bearer " + userToken).content(jsonBody).contentType(MediaType.APPLICATION_JSON));
+        Long todoId = 8L;
+        TodoDTO dto = new TodoDTO(todoId, "Comprar leite", "Atualizado", true, PriorityType.BAIXA, 1L);
+        ResultActions result = mockMvc.perform(put("/todos/" + existentTodoId).header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(dto)).contentType(MediaType.APPLICATION_JSON));
         result.andExpect(status().isNoContent());
     }
 

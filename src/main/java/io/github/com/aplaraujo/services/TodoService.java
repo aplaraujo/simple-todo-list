@@ -29,7 +29,10 @@ public class TodoService {
     }
 
     public List<Todo> getAllTodosByUser(Long userId) {
-        return repository.findByUserId(userId);
+        if (userId != null) {
+            return repository.findByUserId(userId);
+        }
+        return repository.findAll();
     }
 
     public Optional<Todo> getTodoByIdAndUser(Long id, Long userId) {
@@ -54,7 +57,10 @@ public class TodoService {
         repository.save(todo);
     }
 
-    public void delete(Todo todo) {
-        repository.delete(todo);
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Todo not found with id " + id);
+        }
+        repository.deleteById(id);
     }
 }

@@ -8,11 +8,10 @@ import io.github.com.aplaraujo.services.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/todos")
@@ -24,7 +23,7 @@ public class TodoController implements GenericController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody TodoDTO dto) {
+    public ResponseEntity<Void> save(@RequestBody TodoDTO dto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         service.save(dto);
         var url = generateHeaderLocation(dto.id());
         return ResponseEntity.created(url).build();
@@ -32,17 +31,18 @@ public class TodoController implements GenericController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Todo>> findById(@PathVariable("id") String id, Authentication authentication) {
-        Long userId = getUserIdFromAuthentication(authentication);
+    public ResponseEntity<TodoDTO> findById(@PathVariable("id") String id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
         var todoId = Long.parseLong(id);
-        Optional<Todo> todo = service.getTodoByIdAndUser(todoId, userId);
-        return ResponseEntity.ok(todo);
+        return service.getTodoByIdAndUser(todoId, userId)
+                .map(todo -> ResponseEntity.ok(mapper.toDTO(todo)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos(Authentication authentication) {
-        Long userId = getUserIdFromAuthentication(authentication);
+    public ResponseEntity<List<Todo>> getAllTodos(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
         List<Todo> todos = service.getAllTodosByUser(userId);
         return ResponseEntity.ok(todos);
     }
@@ -52,10 +52,10 @@ public class TodoController implements GenericController{
     public ResponseEntity<Object> update(
             @PathVariable("id") String id,
             @RequestBody TodoDTO dto,
-            Authentication authentication) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         var todoId = Long.parseLong(id);
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = userDetails.getId();
         return service.getTodoByIdAndUser(todoId, userId).map(todo -> {
             Todo entity = mapper.toEntity(dto);
             todo.setName(entity.getName());
@@ -69,17 +69,13 @@ public class TodoController implements GenericController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") String id, Authentication authentication) {
+    public ResponseEntity<Object> delete(@PathVariable("id") String id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         var todoId = Long.parseLong(id);
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = userDetails.getId();
         return service.getTodoByIdAndUser(todoId, userId).map(todo -> {
-            service.delete(todo);
+            service.delete(todoId);
             return ResponseEntity.noContent().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    private Long getUserIdFromAuthentication(Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return userDetails.getId();
-    }
 }

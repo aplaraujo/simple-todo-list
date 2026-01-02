@@ -1,5 +1,6 @@
 package io.github.com.aplaraujo.tests;
 
+import io.github.com.aplaraujo.dto.TodoDTO;
 import io.github.com.aplaraujo.entities.Todo;
 import io.github.com.aplaraujo.entities.User;
 import io.github.com.aplaraujo.entities.enums.PriorityType;
@@ -11,6 +12,11 @@ public class Factory {
 
     public static Todo createTodo() {
         return new Todo(1L, "Estudar Java", "Lorem ipsum dolor sit amet", true, PriorityType.ALTA, createUser());
+    }
+
+    public static TodoDTO createTodoDTO() {
+        Todo todo = createTodo();
+        return new TodoDTO(todo.getId(), todo.getName(), todo.getDescription(), todo.getDone(), todo.getPriority(), todo.getUser().getId());
     }
 
 }

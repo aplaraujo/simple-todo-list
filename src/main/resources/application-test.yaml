@@ -26,5 +26,5 @@ spring:
 
 security:
   jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    duration: ${JWT_DURATION}
+    secret-key: ${JWT_SECRET_KEY:O94GzKJ0OdH17nGyue5DMHsgZIeRfRdsOSEbKljTPzX}
+    duration: ${JWT_DURATION:86400}
