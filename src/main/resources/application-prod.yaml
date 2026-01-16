@@ -1,5 +1,6 @@
 spring:
   datasource:
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -7,3 +8,10 @@ spring:
     show_sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.format_sql: false
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET}
+    duration: ${JWT_DURATION}
