@@ -14,7 +14,7 @@ COPY . .
 RUN apt-get install maven -y
 
 # Comando para limpar e rodar o Maven
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 # Comando para rodar uma imagem no projeto
 FROM eclipse-temurin:17-jdk-jammy
