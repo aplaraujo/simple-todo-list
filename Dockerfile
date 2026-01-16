@@ -17,7 +17,7 @@ RUN apt-get install maven -y
 RUN mvn clean install
 
 # Comando para rodar uma imagem no projeto
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 # Expor a porta 8080
 EXPOSE 8080
