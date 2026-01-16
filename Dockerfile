@@ -5,7 +5,7 @@ FROM ubuntu:latest AS build
 RUN apt-get update
 
 # Comando para instalação e configuração do Java
-RUN apt-get install openjdk-21-jdk -y
+RUN apt-get install openjdk-17-jdk -y
 
 # Comando para copiar tudo que está dentro do projeto para o conteiner
 COPY . .
@@ -17,7 +17,7 @@ RUN apt-get install maven -y
 RUN mvn clean install
 
 # Comando para rodar uma imagem no projeto
-FROM eclipse-temurin:21-jdk-jammy
+FROM openjdk:17-jdk-slim
 
 # Expor a porta 8080
 EXPOSE 8080
