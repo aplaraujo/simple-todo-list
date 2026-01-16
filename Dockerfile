@@ -23,7 +23,7 @@ FROM eclipse-temurin:17-jdk-jammy
 EXPOSE 8080
 
 # Comando para copiar o que há dentro da pasta target para o conteiner
-COPY --from=build /target/nome-do-projeto-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /target/simple-todo-list-0.0.1-SNAPSHOT.jar app.jar
 
 # Comando para executar o jar do projeto
 ENTRYPOINT ["java", "-jar", "app.jar"]

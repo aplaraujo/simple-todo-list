@@ -1,8 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/tododb
-    username: postgres
-    password: 123456
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -10,10 +8,3 @@ spring:
     show_sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate.format_sql: true
-
-security:
-  jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    duration: ${DURATION}
