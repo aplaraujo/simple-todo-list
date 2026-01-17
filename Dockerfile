@@ -1,5 +1,5 @@
 # Imagem base
-FROM maven:3.5-alpine-openjdk-17 as build
+FROM ubuntu:latest AS build
 
 # Comando para atualização dos pacotes
 RUN apt-get update
