@@ -26,6 +26,14 @@ public class Todo {
     @Enumerated(EnumType.STRING)
     private PriorityType priority;
 
+    public Todo(String name, String description, Boolean done, PriorityType priority, User user) {
+        this.name = name;
+        this.description = description;
+        this.done = done;
+        this.priority = priority;
+        this.user = user;
+    }
+
     // Relacionamento muitos-para-um (muitas tarefas para um único usuário)
     @ManyToOne
     @JoinColumn(name = "user_id")
